@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,348 +7,462 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .tab-content { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
-        .tab-content.active { display: block; opacity: 1; }
-        .timeline-dot { position: absolute; left: -0.4rem; top: 0.25rem; width: 0.8rem; height: 0.8rem; border-radius: 50%; background-color: #ec4899; border: 2px solid white; box-shadow: 0 0 0 2px #ec4899; }
-        .nav-btn.active { color: #db2777; border-bottom: 2px solid #db2777; font-weight: 700; }
-        /* 自訂滾動條以保持版面整潔 */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
+        /* 動畫與過渡效果 */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .tab-content.active {
+                display: block;
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        /* 導覽列毛玻璃效果 */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-btn.active {
+            color: #db2777;
+            font-weight: 800;
+            position: relative;
+        }
+
+            .nav-btn.active::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 10%;
+                width: 80%;
+                height: 3px;
+                background-color: #db2777;
+                border-radius: 3px;
+            }
+
+        /* 視覺化時間軸 */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 24px;
+            width: 4px;
+            background: linear-gradient(to bottom, #fbcfe8, #bfdbfe);
+            border-radius: 4px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: 8px;
+            top: 0;
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: 3px solid #f472b6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        /* 卡片懸浮效果 */
+        .hover-card {
+            transition: all 0.3s ease;
+        }
+
+            .hover-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+
+        /* 自訂滾動條 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed selection:bg-pink-200 selection:text-pink-900">
 
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="glass-nav sticky top-0 z-50 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 overflow-x-auto whitespace-nowrap">
-                <div class="flex space-x-6 sm:space-x-8">
-                    <button class="nav-btn active px-1 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="overview">🗺️ 行程總覽</button>
-                    <button class="nav-btn px-1 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="transport">🏨 交通住宿</button>
-                    <button class="nav-btn px-1 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="daily">📅 每日行程</button>
-                    <button class="nav-btn px-1 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="food">🍜 美食地圖</button>
-                    <button class="nav-btn px-1 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="prep">🎒 行前準備</button>
+            <div class="flex justify-between h-16 overflow-x-auto whitespace-nowrap hide-scrollbar">
+                <div class="flex space-x-2 sm:space-x-6 w-full justify-around sm:justify-start">
+                    <button class="nav-btn active px-2 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="overview">📸 首頁總覽</button>
+                    <button class="nav-btn px-2 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="transport">✈️ 交通住宿</button>
+                    <button class="nav-btn px-2 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="daily">🗺️ 每日行程</button>
+                    <button class="nav-btn px-2 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="food">🤤 美食圖鑑</button>
+                    <button class="nav-btn px-2 py-4 text-sm font-medium text-slate-500 hover:text-pink-600 transition" data-target="prep">📝 行前準備</button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <header class="relative bg-slate-900 h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden mb-8">
+        <div class="absolute inset-0 opacity-60 bg-[url('https://images.unsplash.com/photo-1597466599360-3b9775841aec?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+
+        <div class="relative z-10 text-center px-4">
+            <span class="inline-block py-1 px-3 rounded-full bg-pink-500/80 text-white text-xs font-bold tracking-widest mb-4 backdrop-blur-sm border border-pink-400/50">BUSAN TRIP 2026</span>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-2 drop-shadow-lg">釜山浪漫雙人遊</h1>
+            <p class="text-pink-200 text-lg sm:text-xl font-medium drop-shadow-md mb-6">海景 • 夜市 • 甜蜜假期</p>
+
+            <div class="flex justify-center gap-4 text-white">
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-3 w-20 text-center border border-white/30">
+                    <div id="cd-days" class="text-2xl font-bold">--</div>
+                    <div class="text-xs text-pink-100">天</div>
+                </div>
+                <div class="bg-white/20 backdrop-blur-md rounded-lg p-3 w-20 text-center border border-white/30">
+                    <div id="cd-hours" class="text-2xl font-bold">--</div>
+                    <div class="text-xs text-pink-100">小時</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pb-12 sm:px-6 lg:px-8">
 
         <section id="overview" class="tab-content active">
-            <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-slate-100 mb-8">
-                <h2 class="text-2xl font-bold text-slate-800 mb-4">🇰🇷 釜山 4 天 3 夜浪漫雙人遊</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <p class="text-slate-600 mb-4">結合絕美海岸線、百萬夜景、在地美食與機場實地觀摩的深度旅程。動線經過優化，大幅減少拖拉行李的不便。</p>
-                        <ul class="space-y-3 text-slate-700">
-                            <li><strong>📍 目的地：</strong> 韓國 釜山 (Busan)</li>
-                            <li><strong>🗓️ 旅遊日期：</strong> 2026/03/27 (五) - 2026/03/30 (一)</li>
-                            <li><strong>👥 同行成員：</strong> 雙人浪漫遊</li>
-                            <li><strong>✨ 旅遊風格：</strong> 浪漫海景、夜市美食、機場觀摩實戰</li>
-                        </ul>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card">
+                    <div class="text-3xl">🗓️</div>
+                    <div><p class="text-xs text-slate-400 font-bold">旅遊天數</p><p class="text-lg font-extrabold text-slate-700">4天3夜</p></div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card">
+                    <div class="text-3xl">👫</div>
+                    <div><p class="text-xs text-slate-400 font-bold">同行成員</p><p class="text-lg font-extrabold text-slate-700">浪漫雙人</p></div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card">
+                    <div class="text-3xl">✈️</div>
+                    <div><p class="text-xs text-slate-400 font-bold">目的地</p><p class="text-lg font-extrabold text-slate-700">韓國釜山</p></div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card">
+                    <div class="text-3xl">✨</div>
+                    <div><p class="text-xs text-slate-400 font-bold">旅行風格</p><p class="text-lg font-extrabold text-slate-700">海景與美食</p></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-6 sm:p-8 border border-slate-100 flex flex-col md:flex-row gap-8 items-center hover-card">
+                <div class="w-full md:w-1/2">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2"><span>🗺️</span> 旅程設計理念</h2>
+                    <p class="text-slate-600 leading-relaxed mb-4">這趟旅程專為兩人打造，結合了釜山最美的海岸線、浪漫的百萬夜景，以及豐富的在地美食。我們將體驗特色天空膠囊列車、享受頂級汗蒸幕，最後一天更安排了機場免稅店的實地觀摩，讓這趟旅行充滿回憶與收穫。</p>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <span class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-semibold">#海雲台</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">#甘川洞文化村</span>
+                        <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold">#富平夜市</span>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-lg flex flex-col items-center justify-center">
-                        <h3 class="text-sm font-bold text-slate-500 mb-2">旅程時間分配預估</h3>
-                        <div class="w-full max-w-[250px]">
-                            <canvas id="timeChart"></canvas>
-                        </div>
+                </div>
+                <div class="w-full md:w-1/2 flex flex-col items-center bg-slate-50 p-6 rounded-xl border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-500 mb-4 tracking-wider">時間精力分配雷達</h3>
+                    <div class="w-full max-w-[280px]">
+                        <canvas id="timeChart"></canvas>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="transport" class="tab-content">
-            <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-slate-100">
-                <h2 class="text-2xl font-bold text-slate-800 mb-6">🏨 交通與住宿安排</h2>
-                
-                <h3 class="text-lg font-bold text-pink-600 mb-3 border-b pb-2">航班與會合資訊</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    <div class="p-4 border border-slate-200 rounded-lg bg-blue-50">
-                        <span class="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded mb-2">男方抵達</span>
-                        <p class="font-bold">06:00 抵達 金海機場 (PUS)</p>
-                        <p class="text-sm text-slate-600">入境後可至 3 樓餐廳或咖啡廳稍作休息。</p>
+
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><span>✈️</span> 航班會合資訊</h2>
+
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col md:flex-row mb-10 border border-slate-200">
+                <div class="flex-1 p-6 border-b md:border-b-0 md:border-r border-dashed border-slate-300 relative bg-gradient-to-br from-blue-50 to-white">
+                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Boyfriend</div>
+                    <p class="text-sm text-slate-500 font-bold mb-1">抵達時間</p>
+                    <h3 class="text-3xl font-black text-blue-900 mb-4">06:00</h3>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-lg font-bold">TPE <span class="text-xs text-slate-400 font-normal">台灣</span></div>
+                        <div class="text-2xl text-slate-300">➔</div>
+                        <div class="text-lg font-bold">PUS <span class="text-xs text-slate-400 font-normal">金海</span></div>
                     </div>
-                    <div class="p-4 border border-slate-200 rounded-lg bg-pink-50">
-                        <span class="inline-block bg-pink-200 text-pink-800 text-xs px-2 py-1 rounded mb-2">女方抵達 (關西出發)</span>
-                        <p class="font-bold">12:20 抵達 金海機場 (PUS)</p>
-                        <p class="text-sm text-slate-600">浪漫會合，正式展開旅程！</p>
+                    <p class="text-sm text-slate-600 bg-blue-100/50 p-2 rounded inline-block mt-2">📍 建議：入境後至 3 樓餐廳稍作休息</p>
+                </div>
+
+                <div class="flex-1 p-6 relative bg-gradient-to-br from-pink-50 to-white">
+                    <div class="absolute top-0 right-0 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Girlfriend</div>
+                    <p class="text-sm text-slate-500 font-bold mb-1">抵達會合</p>
+                    <h3 class="text-3xl font-black text-pink-900 mb-4">12:20</h3>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="text-lg font-bold">KIX <span class="text-xs text-slate-400 font-normal">關西</span></div>
+                        <div class="text-2xl text-slate-300">➔</div>
+                        <div class="text-lg font-bold text-pink-600">PUS <span class="text-xs text-slate-400 font-normal">浪漫會合 ❤️</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><span>🏨</span> 住宿安排</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover-card">
+                    <div class="h-48 bg-[url('https://images.unsplash.com/photo-1542314831-c6a4d14fff88?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center relative">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur text-white text-xs font-bold px-2 py-1 rounded">Day 1</div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-slate-800 text-xl mb-2">海雲台 MS 飯店</h4>
+                        <p class="text-sm text-slate-500 mb-4">Haeundae MS Hotel • 絕佳海景位置，方便前往青沙浦與膠囊列車。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Haeundae+MS+Hotel+Busan" target="_blank" class="w-full block text-center bg-slate-100 hover:bg-pink-50 text-slate-700 hover:text-pink-600 font-bold py-2 rounded-lg transition">📍 開啟 Google Maps</a>
                     </div>
                 </div>
 
-                <h3 class="text-lg font-bold text-pink-600 mb-3 border-b pb-2">住宿安排</h3>
-                <div class="space-y-4">
-                    <div class="p-4 border border-slate-200 rounded-lg hover:shadow-md transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded mb-2 inline-block">Day 1 住宿</span>
-                                <h4 class="font-bold text-slate-800 text-lg">海雲台 MS 飯店 (Haeundae MS Hotel)</h4>
-                                <p class="text-sm text-slate-600">絕佳海景位置，方便前往青沙浦與膠囊列車。</p>
-                            </div>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Haeundae+MS+Hotel+Busan" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm font-medium underline whitespace-nowrap ml-4">Google Maps</a>
-                        </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover-card">
+                    <div class="h-48 bg-[url('https://images.unsplash.com/photo-1582719478250-c8940021cbab?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center relative">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur text-white text-xs font-bold px-2 py-1 rounded">Day 2 - 3</div>
                     </div>
-                    <div class="p-4 border border-slate-200 rounded-lg hover:shadow-md transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded mb-2 inline-block">Day 2 - Day 3 住宿</span>
-                                <h4 class="font-bold text-slate-800 text-lg">南浦獵犬特級飯店 (Hound Hotel Premier Nampo)</h4>
-                                <p class="text-sm text-slate-600">位於鬧區，步行可達 BIFF 廣場與富平夜市。</p>
-                            </div>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Hound+Hotel+Premier+Nampo" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm font-medium underline whitespace-nowrap ml-4">Google Maps</a>
-                        </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-slate-800 text-xl mb-2">南浦獵犬特級飯店</h4>
+                        <p class="text-sm text-slate-500 mb-4">Hound Hotel Premier • 位於南浦洞鬧區，步行可達 BIFF 廣場與富平夜市。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Hound+Hotel+Premier+Nampo" target="_blank" class="w-full block text-center bg-slate-100 hover:bg-pink-50 text-slate-700 hover:text-pink-600 font-bold py-2 rounded-lg transition">📍 開啟 Google Maps</a>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="daily" class="tab-content">
-            <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-slate-100">
-                <h2 class="text-2xl font-bold text-slate-800 mb-6">📅 每日行程規劃</h2>
 
-                <div class="mb-10">
-                    <h3 class="text-xl font-bold bg-pink-50 text-pink-800 inline-block px-4 py-2 rounded-lg mb-6">Day 1：3/27 機場浪漫會合與絕美海岸線</h3>
-                    <div class="relative border-l-2 border-slate-200 ml-3 md:ml-4">
-                        
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">12:20 金海機場會合出發 🛫</h4>
-                            <p class="text-slate-500 text-sm mt-1 mb-2">🚌 交通：搭乘機場巴士或輕軌轉地鐵前往海雲台</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Gimhae+International+Airport" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">13:30 海雲台 MS 飯店寄放行李</h4>
-                            <p class="text-slate-600 text-sm mt-1">預估時間：1小時15分 (含交通)</p>
-                        </div>
-
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">14:45 海雲台周邊快速午餐 (豬肉湯飯)</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：45分鐘</p>
-                        </div>
-
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">15:30 青沙浦海景與平交道</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：1小時</p>
-                            <p class="text-slate-500 text-sm mt-1 mb-2">🚕 交通：搭乘計程車直達青沙浦站</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Cheongsapo+Busan" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">16:30 天空膠囊列車 (青沙浦 ➔ 尾浦)</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：30分鐘 (欣賞絕美夕陽海景)</p>
-                        </div>
-
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">17:00 尾浦 / 海雲台晚餐 (韓式烤肉或海鮮)</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：1.5小時</p>
-                        </div>
-
-                        <div class="pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">18:30 荒嶺山烽火台百萬夜景 ✨</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：2小時</p>
-                            <p class="text-slate-500 text-sm mt-1 mb-2">🚇 交通：搭地鐵至金蓮山站轉計程車上山</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Hwangnyeongsan+Mountain" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-10">
-                    <h3 class="text-xl font-bold bg-pink-50 text-pink-800 inline-block px-4 py-2 rounded-lg mb-6">Day 2：3/28 奢華汗蒸幕與南浦洞夜生活</h3>
-                    <div class="relative border-l-2 border-slate-200 ml-3 md:ml-4">
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">10:30 海雲台飯店退房</h4>
-                            <p class="text-slate-600 text-sm mt-1">💡 推薦：使用 Zimcarry 行李特工寄送行李至南浦洞飯店</p>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">11:00 SPA LAND 汗蒸幕 🧖‍♀️</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：3小時 (新世界百貨內，室內放鬆約會與午餐)</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=SPA+LAND+Centum+City" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">14:30 廣安里海水浴場 ☕</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：2.5小時 (浪漫海景咖啡廳下午茶、沙灘漫步)</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Gwangalli+Beach" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">17:00 前往南浦洞獵犬特級飯店</h4>
-                            <p class="text-slate-600 text-sm mt-1">領取行李與 Check-in 休息</p>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">18:30 BIFF 廣場 & 南浦洞商圈 🛍️</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：1.5小時 (吃堅果黑糖餅、逛街)</p>
-                        </div>
-                        <div class="pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">20:00 富平罐頭市場夜市 🍢</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：1.5小時 (大啖烤腸、辣炒年糕等在地小吃)</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Bupyeong+Kkangtong+Market" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-10">
-                    <h3 class="text-xl font-bold bg-pink-50 text-pink-800 inline-block px-4 py-2 rounded-lg mb-6">Day 3：3/29 彩色山城與高空港都夜景</h3>
-                    <div class="relative border-l-2 border-slate-200 ml-3 md:ml-4">
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">09:30 甘川洞文化村 & 天頂展望台 🦊</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：3小時 (拍小王子與全景)</p>
-                            <p class="text-slate-500 text-sm mt-1 mb-2">🚕 交通：南浦洞搭計程車直達</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Gamcheon+Culture+Village" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">12:30 松島周邊午餐 🦀</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：2小時 (享用新鮮海鮮)</p>
-                            <p class="text-slate-500 text-sm mt-1 mb-2">🚕 交通：甘川洞搭計程車至松島</p>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">14:30 松島海上纜車 🚠</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：2小時 (推薦透明底水晶車廂、走松島龍宮雲橋)</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Songdo+Marine+Cable+Car" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">16:30 樂天百貨光復店 ⛲</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：3小時 (觀賞室內音樂噴泉、11F空中花園看夕陽與晚餐)</p>
-                        </div>
-                        <div class="pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">19:30 釜山塔夜景 🗼</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：1.5小時 (搭乘免費戶外手扶梯上龍頭山公園，360度賞景)</p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Busan+Tower" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm underline">Google Maps</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-10">
-                    <h3 class="text-xl font-bold bg-pink-50 text-pink-800 inline-block px-4 py-2 rounded-lg mb-6">Day 4：3/30 悠閒早晨與滿載歸國</h3>
-                    <div class="relative border-l-2 border-slate-200 ml-3 md:ml-4">
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">08:30 南浦洞悠閒早餐 & 最後採買 🥪</h4>
-                            <p class="text-slate-600 text-sm mt-1">建議停留：1小時 (推薦：Isaac 吐司或文青咖啡廳)</p>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">09:30 飯店整理行李與退房</h4>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">10:00 前往金海機場 🚕</h4>
-                            <p class="text-slate-600 text-sm mt-1">預估時間：1小時 (推薦直接從飯店搭計程車，省去搬行李轉車之苦)</p>
-                        </div>
-                        <div class="mb-6 pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">11:00 機場報到與免稅店實地考察 🛍️</h4>
-                            <p class="text-slate-600 text-sm mt-1 leading-relaxed">建議停留：2.5小時<br>辦理報到後時間充裕。除了買伴手禮，這也是個絕佳的機會實地觀察免稅專櫃的運作與動線規劃。可以特別留意地勤與專櫃人員在<strong class="text-pink-600">「接客」</strong>時的應對細節與服務流程，把這些寶貴的實戰觀察當作這趟旅行最後的收穫！</p>
-                        </div>
-                        <div class="pl-6 relative">
-                            <div class="timeline-dot"></div>
-                            <h4 class="font-bold text-lg text-slate-800">13:30 搭機返家 ✈️</h4>
-                            <p class="text-slate-600 text-sm mt-1">結束完美的釜山浪漫之旅！</p>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="flex gap-2 overflow-x-auto pb-4 mb-4 hide-scrollbar border-b border-slate-200 sticky top-16 bg-slate-50 z-40 pt-2">
+                <a href="#day1" class="px-4 py-2 bg-pink-600 text-white rounded-full text-sm font-bold shadow-md whitespace-nowrap">Day 1 海岸線</a>
+                <a href="#day2" class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-bold whitespace-nowrap">Day 2 汗蒸幕</a>
+                <a href="#day3" class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-bold whitespace-nowrap">Day 3 彩色山城</a>
+                <a href="#day4" class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-bold whitespace-nowrap">Day 4 滿載歸國</a>
             </div>
+
+            <div id="day1" class="mb-12 pt-4">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D1</div>
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-800">3/27 機場浪漫會合與絕美海岸線</h3>
+                        <p class="text-sm text-slate-500">海雲台 • 青沙浦 • 荒嶺山夜景</p>
+                    </div>
+                </div>
+
+                <div class="relative timeline-container ml-2">
+                    <div class="timeline-item">
+                        <div class="timeline-icon">💑</div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card">
+                            <span class="text-pink-500 font-bold text-lg">12:20</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">金海機場會合出發</h4>
+                            <div class="flex items-center gap-2 text-sm text-slate-600 bg-slate-50 p-2 rounded-lg mb-3">
+                                <span>🚌 搭乘機場巴士或輕軌轉地鐵前往海雲台</span>
+                            </div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Gimhae+International+Airport" target="_blank" class="inline-block text-xs font-bold text-white bg-slate-800 px-3 py-1.5 rounded-md hover:bg-slate-700">Google Maps 路線</a>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🧳</div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card">
+                            <span class="text-pink-500 font-bold text-lg">13:30</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1">海雲台 MS 飯店寄放行李</h4>
+                            <p class="text-sm text-slate-500 mt-2">預估時間：1小時15分 (含交通)</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-icon border-blue-400">🚂</div>
+                        <div class="bg-gradient-to-r from-blue-50 to-white p-5 rounded-xl shadow-sm border border-blue-100 hover-card">
+                            <span class="text-blue-600 font-bold text-lg">16:30</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">天空膠囊列車 (青沙浦 ➔ 尾浦)</h4>
+                            <p class="text-sm text-slate-600 mb-3">必遊重點！在緩慢移動的彩色車廂內欣賞絕美夕陽海景，建議停留 30 分鐘。</p>
+                            <div class="h-24 w-full bg-[url('https://images.unsplash.com/photo-1617349138612-421eb18e2444?q=80&w=800&auto=format')] bg-cover bg-center rounded-lg opacity-80"></div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-icon border-purple-400">✨</div>
+                        <div class="bg-gradient-to-r from-purple-50 to-white p-5 rounded-xl shadow-sm border border-purple-100 hover-card">
+                            <span class="text-purple-600 font-bold text-lg">18:30</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">荒嶺山烽火台百萬夜景</h4>
+                            <p class="text-sm text-slate-600 mb-2">搭地鐵至金蓮山站轉計程車上山，俯瞰整個釜山港區的璀璨燈火。</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Hwangnyeongsan+Mountain" target="_blank" class="inline-block text-xs font-bold text-white bg-purple-600 px-3 py-1.5 rounded-md hover:bg-purple-700">Google Maps</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day2" class="mb-12">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D2</div>
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-800">3/28 奢華汗蒸幕與南浦洞夜生活</h3>
+                    </div>
+                </div>
+                <div class="relative timeline-container ml-2">
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🧖‍♀️</div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card">
+                            <span class="text-pink-500 font-bold text-lg">11:00</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1">SPA LAND 汗蒸幕</h4>
+                            <p class="text-sm text-slate-600 mt-2">新世界百貨內，頂級室內放鬆約會與午餐。 (建議使用 Zimcarry 寄送行李)</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon border-orange-400">🍢</div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card">
+                            <span class="text-orange-500 font-bold text-lg">20:00</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">富平罐頭市場夜市</h4>
+                            <p class="text-sm text-slate-600">大啖烤腸、辣炒年糕等在地小吃，體驗最接地氣的南浦洞夜生活。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day3" class="mb-12">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D3</div>
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-800">3/29 彩色山城與高空港都夜景</h3>
+                    </div>
+                </div>
+                <div class="relative timeline-container ml-2">
+                    <div class="timeline-item">
+                        <div class="timeline-icon border-yellow-400">🦊</div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card">
+                            <span class="text-yellow-600 font-bold text-lg">09:30</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">甘川洞文化村 & 天頂展望台</h4>
+                            <p class="text-sm text-slate-600 mb-2">釜山的馬丘比丘！和彩色房子與小王子雕像拍滿合照。</p>
+                            <div class="h-32 w-full bg-[url('https://images.unsplash.com/photo-1590483259881-8742ab11b5e5?q=80&w=800&auto=format')] bg-cover bg-center rounded-lg mt-2"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon border-cyan-400">🚠</div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card">
+                            <span class="text-cyan-600 font-bold text-lg">14:30</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1">松島海上纜車</h4>
+                            <p class="text-sm text-slate-600 mt-2">推薦搭乘透明底「水晶車廂」，刺激又浪漫，並步行松島龍宮雲橋。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day4" class="mb-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D4</div>
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-800">3/30 悠閒早晨與滿載歸國</h3>
+                    </div>
+                </div>
+                <div class="relative timeline-container ml-2">
+                    <div class="timeline-item">
+                        <div class="timeline-icon border-emerald-400">🛍️</div>
+                        <div class="bg-gradient-to-r from-emerald-50 to-white p-5 rounded-xl shadow-sm border border-emerald-100 hover-card">
+                            <span class="text-emerald-600 font-bold text-lg">11:00</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">機場免稅店實地考察</h4>
+                            <p class="text-sm text-slate-700 leading-relaxed bg-white p-3 rounded shadow-sm">
+                                💡 <strong class="text-emerald-700">觀摩重點：</strong> 辦理報到後，這是個絕佳機會實地觀察免稅專櫃的運作。請特別留意地勤與專櫃人員的動線規劃與服務細節，把這些寶貴的實戰觀察當作這趟旅行最後的收穫！
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">✈️</div>
+                        <div class="bg-slate-800 text-white p-5 rounded-xl shadow-sm hover-card text-center">
+                            <span class="text-pink-300 font-bold text-lg block">13:30</span>
+                            <h4 class="font-bold text-xl mt-1">搭機返家，完美結束旅程！</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <section id="food" class="tab-content">
-            <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-slate-100">
-                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-4 md:mb-0">🍜 釜山必吃美食清單</h2>
-                    
-                    <div class="flex flex-wrap gap-2" id="food-filters">
-                        <button class="filter-btn px-4 py-1.5 bg-pink-600 text-white rounded-full text-sm font-medium transition" data-filter="all">全部</button>
-                        <button class="filter-btn px-4 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-full text-sm font-medium transition" data-filter="meal">韓式正餐</button>
-                        <button class="filter-btn px-4 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-full text-sm font-medium transition" data-filter="seafood">海鮮</button>
-                        <button class="filter-btn px-4 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-full text-sm font-medium transition" data-filter="snack">在地小吃/早餐</button>
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-800 mb-2">🤤 釜山必吃美食圖鑑</h2>
+                    <p class="text-slate-500 text-sm">點擊標籤切換想吃的美食類型</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mt-4 md:mt-0" id="food-filters">
+                    <button class="filter-btn active px-5 py-2 bg-slate-800 text-white rounded-full text-sm font-bold shadow-md transition transform hover:scale-105" data-filter="all">全部</button>
+                    <button class="filter-btn px-5 py-2 bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-full text-sm font-bold transition transform hover:scale-105" data-filter="meal">🍲 韓式正餐</button>
+                    <button class="filter-btn px-5 py-2 bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-full text-sm font-bold transition transform hover:scale-105" data-filter="seafood">🦀 海鮮</button>
+                    <button class="filter-btn px-5 py-2 bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-full text-sm font-bold transition transform hover:scale-105" data-filter="snack">🍡 在地小吃</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="food-list">
+
+                <div class="food-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover-card" data-category="meal">
+                    <div class="h-40 bg-[url('https://images.unsplash.com/photo-1580651315530-69c8e0026377?q=80&w=600&auto=format')] bg-cover bg-center"></div>
+                    <div class="p-5">
+                        <span class="text-xs font-extrabold text-amber-700 bg-amber-100 px-2 py-1 rounded mb-2 inline-block">🍲 韓式正餐</span>
+                        <h3 class="font-black text-xl mb-1 text-slate-800">豬肉湯飯 (海雲台)</h3>
+                        <p class="text-sm text-slate-500 mb-4 line-clamp-2">釜山靈魂美食，濃郁熱湯配上鮮嫩豬肉，下機後的第一餐首選。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Pork+Soup+Rice+Haeundae" target="_blank" class="text-pink-600 font-bold text-sm hover:underline flex items-center gap-1">📍 Google Maps ➔</a>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="food-list">
-                    
-                    <div class="food-card border border-slate-100 rounded-xl p-5 hover:shadow-md transition bg-slate-50" data-category="meal">
-                        <span class="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded mb-3 inline-block">韓式正餐</span>
-                        <h3 class="font-bold text-lg mb-1">豬肉湯飯 (海雲台)</h3>
-                        <p class="text-sm text-slate-500 mb-3">釜山靈魂美食，濃郁熱湯配上鮮嫩豬肉，下機後的第一餐首選。</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Pork+Soup+Rice+Haeundae" target="_blank" class="text-pink-500 text-sm underline">Google Maps</a>
+                <div class="food-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover-card" data-category="meal">
+                    <div class="h-40 bg-[url('https://images.unsplash.com/photo-1544025162-8e6f1f513926?q=80&w=600&auto=format')] bg-cover bg-center"></div>
+                    <div class="p-5">
+                        <span class="text-xs font-extrabold text-amber-700 bg-amber-100 px-2 py-1 rounded mb-2 inline-block">🥩 韓式烤肉</span>
+                        <h3 class="font-black text-xl mb-1 text-slate-800">韓式烤肉 (尾浦)</h3>
+                        <p class="text-sm text-slate-500 mb-4 line-clamp-2">搭完膠囊列車後，來份道地的韓式烤肉補充體力。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Korean+BBQ+Mipo+Busan" target="_blank" class="text-pink-600 font-bold text-sm hover:underline flex items-center gap-1">📍 Google Maps ➔</a>
                     </div>
-
-                    <div class="food-card border border-slate-100 rounded-xl p-5 hover:shadow-md transition bg-slate-50" data-category="meal">
-                        <span class="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded mb-3 inline-block">韓式正餐</span>
-                        <h3 class="font-bold text-lg mb-1">韓式烤肉 (尾浦)</h3>
-                        <p class="text-sm text-slate-500 mb-3">搭完膠囊列車後，來份道地的韓式烤肉補充體力。</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Korean+BBQ+Mipo+Busan" target="_blank" class="text-pink-500 text-sm underline">Google Maps</a>
-                    </div>
-
-                    <div class="food-card border border-slate-100 rounded-xl p-5 hover:shadow-md transition bg-slate-50" data-category="seafood">
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded mb-3 inline-block">海鮮</span>
-                        <h3 class="font-bold text-lg mb-1">松島海鮮餐廳</h3>
-                        <p class="text-sm text-slate-500 mb-3">松島周邊新鮮直送的海產，推薦烤貝類或海鮮鍋。</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Seafood+Songdo+Busan" target="_blank" class="text-pink-500 text-sm underline">Google Maps</a>
-                    </div>
-
-                    <div class="food-card border border-slate-100 rounded-xl p-5 hover:shadow-md transition bg-slate-50" data-category="snack">
-                        <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded mb-3 inline-block">在地小吃/早餐</span>
-                        <h3 class="font-bold text-lg mb-1">堅果黑糖餅 (BIFF廣場)</h3>
-                        <p class="text-sm text-slate-500 mb-3">油炸得金黃酥脆的餅皮，剪開塞滿各式堅果，必吃甜點！</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=BIFF+Square+Hotteok" target="_blank" class="text-pink-500 text-sm underline">Google Maps</a>
-                    </div>
-
-                    <div class="food-card border border-slate-100 rounded-xl p-5 hover:shadow-md transition bg-slate-50" data-category="snack">
-                        <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded mb-3 inline-block">在地小吃/早餐</span>
-                        <h3 class="font-bold text-lg mb-1">富平罐頭市場夜市小吃</h3>
-                        <p class="text-sm text-slate-500 mb-3">烤腸、辣炒年糕、魚板湯，感受釜山熱鬧的夜市氛圍。</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Bupyeong+Kkangtong+Market+Food" target="_blank" class="text-pink-500 text-sm underline">Google Maps</a>
-                    </div>
-
-                    <div class="food-card border border-slate-100 rounded-xl p-5 hover:shadow-md transition bg-slate-50" data-category="snack">
-                        <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded mb-3 inline-block">在地小吃/早餐</span>
-                        <h3 class="font-bold text-lg mb-1">Isaac 吐司 (南浦洞)</h3>
-                        <p class="text-sm text-slate-500 mb-3">韓國超人氣鐵板奶油吐司，悠閒早晨的最佳選擇。</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Isaac+Toast+Nampo" target="_blank" class="text-pink-500 text-sm underline">Google Maps</a>
-                    </div>
-
                 </div>
+
+                <div class="food-card bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover-card" data-category="snack">
+                    <div class="h-40 bg-[url('https://images.unsplash.com/photo-1588667823531-b40b080536d5?q=80&w=600&auto=format')] bg-cover bg-center"></div>
+                    <div class="p-5">
+                        <span class="text-xs font-extrabold text-orange-700 bg-orange-100 px-2 py-1 rounded mb-2 inline-block">🍡 在地小吃</span>
+                        <h3 class="font-black text-xl mb-1 text-slate-800">堅果黑糖餅</h3>
+                        <p class="text-sm text-slate-500 mb-4 line-clamp-2">BIFF廣場必吃！油炸得金黃酥脆的餅皮，剪開塞滿各式堅果。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=BIFF+Square+Hotteok" target="_blank" class="text-pink-600 font-bold text-sm hover:underline flex items-center gap-1">📍 Google Maps ➔</a>
+                    </div>
+                </div>
+
             </div>
         </section>
 
         <section id="prep" class="tab-content">
-            <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-slate-100">
-                <h2 class="text-2xl font-bold text-slate-800 mb-6">🎒 行前準備清單與小提醒</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">📄 文件與通訊</h3>
-                        <ul class="list-disc list-inside text-slate-600 space-y-2">
-                            <li>護照 (確認效期 6 個月以上)</li>
-                            <li>K-ETA 或 Q-code 填寫 (依當時韓國入境規定)</li>
-                            <li>韓國吃到飽網卡或 eSIM</li>
-                            <li>預約 Zimcarry 行李特工服務 (Day 2)</li>
-                            <li>預約松島海上纜車/天空膠囊列車車票</li>
+            <div class="bg-gradient-to-br from-pink-50 to-blue-50 rounded-3xl shadow-sm p-8 border border-white/50 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 text-9xl opacity-10">🎒</div>
+
+                <h2 class="text-3xl font-black text-slate-800 mb-8 relative z-10">行前最後確認清單</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-sm">
+                        <h3 class="font-black text-xl mb-4 text-blue-900 border-b-2 border-blue-100 pb-2">📄 必備文件與預約</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-green-500">✔️</span> 護照 (確認效期 6 個月以上)</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-green-500">✔️</span> 韓國入境規定文件 (K-ETA / Q-code)</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-green-500">✔️</span> 韓國上網卡或 eSIM</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-green-500">✔️</span> 預約 Zimcarry 行李特工 (Day 2)</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-green-500">✔️</span> 預約天空膠囊列車車票</li>
                         </ul>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">💵 裝備與花費</h3>
-                        <ul class="list-disc list-inside text-slate-600 space-y-2">
-                            <li>舒適好走的平底鞋/運動鞋 (甘川洞有許多坡道)</li>
-                            <li>釜山靠海風大，建議準備防風外套</li>
-                            <li>換取適量韓元現金 (部分小吃攤不收信用卡)</li>
-                            <li>下載 Naver Map 或 Kakao Map (Google Maps 在韓國導航有時不準確)</li>
+
+                    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-sm">
+                        <h3 class="font-black text-xl mb-4 text-pink-900 border-b-2 border-pink-100 pb-2">💵 裝備與實用 App</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-pink-500">🌸</span> 舒適好走的美美平底鞋 (甘川洞有坡道)</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-pink-500">🌸</span> 輕薄防風外套 (海邊風大)</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-pink-500">🌸</span> 換取適量韓元現金 (夜市小吃攤用)</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-pink-500">🌸</span> 下載 Naver Map / Kakao Map</li>
+                            <li class="flex items-start gap-2 text-slate-700"><span class="text-pink-500">🌸</span> 帶著期待與浪漫的心情！</li>
                         </ul>
                     </div>
                 </div>
@@ -359,85 +473,114 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // 1. 導覽列切換邏輯
+
+            // --- 1. 倒數計時器邏輯 ---
+            // 設定出發時間為 2026/03/27 06:00:00
+            const tripDate = new Date('2026-03-27T06:00:00').getTime();
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = tripDate - now;
+
+                if (distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    document.getElementById('cd-days').innerText = days;
+                    document.getElementById('cd-hours').innerText = hours;
+                } else {
+                    document.getElementById('cd-days').innerText = "0";
+                    document.getElementById('cd-hours').innerText = "0";
+                    document.querySelector('.text-pink-200.text-lg').innerText = "🎉 旅程已經開始啦！ 🎉";
+                }
+            }
+            setInterval(updateCountdown, 1000 * 60); // 每分鐘更新一次
+            updateCountdown(); // 初始執行
+
+            // --- 2. 導覽列切換邏輯 ---
             const navBtns = document.querySelectorAll('.nav-btn');
             const tabContents = document.querySelectorAll('.tab-content');
 
             navBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    // 移除所有狀態
                     navBtns.forEach(b => {
-                        b.classList.remove('active', 'text-pink-600', 'border-b-2', 'border-pink-600');
+                        b.classList.remove('active', 'text-pink-600');
                         b.classList.add('text-slate-500');
                     });
-                    tabContents.forEach(content => content.classList.remove('active'));
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
 
+                    // 啟用當前狀態
                     btn.classList.add('active', 'text-pink-600');
                     btn.classList.remove('text-slate-500');
-                    
+
                     const targetId = btn.getAttribute('data-target');
                     document.getElementById(targetId).classList.add('active');
+
+                    // 平滑滾動到上方
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             });
 
-            document.querySelector('.nav-btn.active').classList.add('text-pink-600', 'border-b-2', 'border-pink-600');
-            document.querySelector('.nav-btn.active').classList.remove('text-slate-500');
-
-            // 2. Chart.js 時間分配圖表
+            // --- 3. Chart.js 雷達圖 (視覺化升級) ---
             const ctx = document.getElementById('timeChart').getContext('2d');
             new Chart(ctx, {
-                type: 'pie',
+                type: 'radar',
                 data: {
-                    labels: ['景點觀光', '交通移動', '美食饗宴', '機場觀摩/購物', '休閒/SPA'],
+                    labels: ['浪漫海景', '在地美食', '逛街購物', '放鬆紓壓', '專業觀摩'],
                     datasets: [{
-                        data: [35, 15, 25, 10, 15],
-                        backgroundColor: [
-                            '#3b82f6', // blue
-                            '#94a3b8', // slate
-                            '#f59e0b', // amber
-                            '#ec4899', // pink
-                            '#10b981'  // emerald
-                        ],
-                        borderWidth: 0
+                        label: '行程佔比',
+                        data: [90, 85, 60, 75, 50],
+                        backgroundColor: 'rgba(236, 72, 153, 0.2)', // Pink-500 搭配透明度
+                        borderColor: '#db2777', // Pink-600
+                        pointBackgroundColor: '#db2777',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#db2777',
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.label + ': 約 ' + context.raw + '%';
-                                }
-                            }
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.05)' },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            pointLabels: { font: { family: 'sans-serif', size: 12, weight: 'bold' }, color: '#64748b' },
+                            ticks: { display: false, min: 0, max: 100 }
                         }
-                    }
+                    },
+                    plugins: { legend: { display: false } }
                 }
             });
 
-            // 3. 美食地圖篩選邏輯
+            // --- 4. 美食圖鑑篩選邏輯 ---
             const filterBtns = document.querySelectorAll('.filter-btn');
             const foodCards = document.querySelectorAll('.food-card');
 
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    // 切換按鈕樣式
                     filterBtns.forEach(b => {
-                        b.classList.remove('bg-pink-600', 'text-white');
-                        b.classList.add('bg-slate-100', 'text-slate-600');
+                        b.classList.remove('bg-slate-800', 'text-white');
+                        b.classList.add('bg-white', 'text-slate-600');
                     });
-                    btn.classList.remove('bg-slate-100', 'text-slate-600');
-                    btn.classList.add('bg-pink-600', 'text-white');
+                    btn.classList.remove('bg-white', 'text-slate-600');
+                    btn.classList.add('bg-slate-800', 'text-white');
 
                     const filterValue = btn.getAttribute('data-filter');
 
+                    // 篩選卡片
                     foodCards.forEach(card => {
                         if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
                             card.style.display = 'block';
-                            card.style.opacity = '0';
-                            setTimeout(() => { card.style.opacity = '1'; }, 50);
+                            // 微動畫
+                            setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 10);
                         } else {
-                            card.style.display = 'none';
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.95)';
+                            setTimeout(() => { card.style.display = 'none'; }, 300); // 等待過渡動畫結束
                         }
                     });
                 });
