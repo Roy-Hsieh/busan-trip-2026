@@ -11,24 +11,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .tab-content {
-            position: absolute;
-            width: 100%;
-            opacity: 0;
-            transform: translateY(12px);
-            pointer-events: none;
-            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-            .tab-content.active {
-                position: relative;
-                opacity: 1;
-                transform: translateY(0);
-                pointer-events: auto;
-            }
-
-        .tab-wrapper {
-            position: relative;
+        /* 各區段錨點偏移 */
+        section[id] {
+            scroll-margin-top: 80px;
         }
 
         .hide-scrollbar {
@@ -152,9 +137,17 @@
             margin-top: 1rem;
         }
 
-        /* 日期錨點偏移 */
+        /* 日期錨點偏移 (主nav 64px + dayNav ~56px + padding) */
         [id^="day"] {
             scroll-margin-top: 140px;
+        }
+
+        /* 區段分隔線 */
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+            margin: 0 0 2rem 0;
         }
 
         /* 日期子導航 active 狀態 */
@@ -305,8 +298,7 @@
     <button class="back-to-top" id="backToTop" aria-label="回到頂部">↑</button>
 
     <main class="max-w-5xl mx-auto px-4 pb-12 sm:px-6 lg:px-8">
-      <div class="tab-wrapper">
-        <section id="overview" class="tab-content active">
+        <section id="overview" class="mb-16">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card"><div class="text-3xl">🗓️</div><div><p class="text-xs text-slate-400 font-bold">旅遊天數</p><p class="text-lg font-extrabold text-slate-700">4天3夜</p></div></div>
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card"><div class="text-3xl">👫</div><div><p class="text-xs text-slate-400 font-bold">同行成員</p><p class="text-lg font-extrabold text-slate-700">兩人同行</p></div></div>
@@ -330,7 +322,8 @@
             </div>
         </section>
 
-        <section id="transport" class="tab-content">
+        <hr class="section-divider">
+        <section id="transport" class="mb-16">
             <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><span>✈️</span> 航班會合資訊</h2>
             <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col md:flex-row mb-10 border border-slate-200">
                 <div class="flex-1 p-6 border-b md:border-b-0 md:border-r border-dashed border-slate-300 relative bg-gradient-to-br from-blue-50 to-white">
@@ -378,7 +371,8 @@
             </div>
         </section>
 
-        <section id="daily" class="tab-content">
+        <hr class="section-divider">
+        <section id="daily" class="mb-16">
             <div class="flex gap-2 overflow-x-auto pb-4 mb-4 hide-scrollbar border-b border-slate-200 sticky top-16 bg-slate-50 z-40 pt-2" id="dayNav">
                 <a href="#day1" class="day-pill active px-4 py-2 rounded-full text-sm font-bold shadow-md whitespace-nowrap border border-transparent transition-all">Day 1 雙列車海景</a>
                 <a href="#day2" class="day-pill px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-bold whitespace-nowrap transition-all">Day 2 汗蒸幕與貝果</a>
@@ -679,7 +673,8 @@
             </div>
         </section>
 
-        <section id="food" class="tab-content">
+        <hr class="section-divider">
+        <section id="food" class="mb-16">
             <h2 class="text-3xl font-black text-slate-800 mb-6">🤤 釜山必吃美食圖鑑</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="food-list">
                 <div class="food-card bg-white rounded-2xl overflow-hidden shadow-sm border border-amber-200 hover-card">
@@ -709,7 +704,8 @@
             </div>
         </section>
 
-        <section id="prep" class="tab-content">
+        <hr class="section-divider">
+        <section id="prep" class="mb-16">
             <div class="bg-gradient-to-br from-pink-50 to-blue-50 rounded-3xl shadow-sm p-8 border border-white/50 relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 text-9xl opacity-10">🎒</div>
                 <h2 class="text-3xl font-black text-slate-800 mb-8 relative z-10">行前最後確認清單</h2>
@@ -746,7 +742,6 @@
             </div>
         </section>
 
-      </div><!-- end tab-wrapper -->
     </main>
 
     <footer class="bg-slate-800 text-slate-400 text-center py-8 mt-12">
@@ -772,19 +767,34 @@
             setInterval(updateCountdown, 60000);
             updateCountdown();
 
-            // ── 主選單 Tab 切換 (修正動畫) ──
+            // ── 主選單滾動導航 ──
             const navBtns = document.querySelectorAll('.nav-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
             navBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    navBtns.forEach(b => { b.classList.remove('active', 'text-pink-600'); b.classList.add('text-slate-500'); });
-                    tabContents.forEach(c => c.classList.remove('active'));
-                    btn.classList.add('active', 'text-pink-600');
-                    btn.classList.remove('text-slate-500');
                     const target = document.getElementById(btn.getAttribute('data-target'));
-                    target.classList.add('active');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
                 });
+            });
+
+            // ── 滾動時自動高亮主選單 ──
+            const sectionIds = ['overview', 'transport', 'daily', 'food', 'prep'];
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.id;
+                        navBtns.forEach(b => {
+                            const isMatch = b.getAttribute('data-target') === activeId;
+                            b.classList.toggle('active', isMatch);
+                            b.classList.toggle('text-pink-600', isMatch);
+                            b.classList.toggle('text-slate-500', !isMatch);
+                        });
+                    }
+                });
+            }, { rootMargin: '-20% 0px -60% 0px' });
+
+            sectionIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) navObserver.observe(el);
             });
 
             // ── 每日行程子導航 active 切換 ──
