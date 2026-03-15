@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="2026 釜山浪漫雙人遊 — 4天3夜行程規劃：天空膠囊列車、自然島鹽麵包、SPA LAND 汗蒸幕、松島纜車">
-    <meta property="og:title" content="釜山浪漫雙人遊 2026">
+    <meta name="description" content="2026 釜山自由行 — 4天3夜行程規劃：天空膠囊列車、自然島鹽麵包、SPA LAND 汗蒸幕、松島纜車">
+    <meta property="og:title" content="釜山自由行 2026">
     <meta property="og:description" content="海景 • 汗蒸幕 • 必吃美食地圖 — 4天3夜完美行程">
     <meta property="og:type" content="website">
-    <title>釜山浪漫雙人遊 | 專屬旅遊規劃</title>
+    <title>釜山自由行 | 4天3夜行程規劃</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -224,6 +224,45 @@
         .map-placeholder:hover {
             background: #e2e8f0;
         }
+
+        /* 交通資訊卡片 */
+        .transport-card {
+            margin: -0.5rem 0 1.5rem 60px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            font-size: 0.875rem;
+        }
+
+        .transport-card .transport-header {
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: #475569;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .transport-option {
+            padding: 0.75rem 1rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .transport-option + .transport-option {
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .transport-badge {
+            flex-shrink: 0;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans leading-relaxed selection:bg-pink-200 selection:text-pink-900">
@@ -247,8 +286,8 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
         <div class="relative z-10 text-center px-4">
             <span class="inline-block py-1 px-3 rounded-full bg-pink-500/80 text-white text-xs font-bold tracking-widest mb-4 backdrop-blur-sm border border-pink-400/50">BUSAN TRIP 2026</span>
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-2 drop-shadow-lg">釜山浪漫雙人遊</h1>
-            <p class="text-pink-200 text-lg sm:text-xl font-medium drop-shadow-md mb-6">海景 • 汗蒸幕 • 必吃美食地圖</p>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-2 drop-shadow-lg">釜山自由行</h1>
+            <p class="text-pink-200 text-lg sm:text-xl font-medium drop-shadow-md mb-6">海景 • 汗蒸幕 • 必吃美食 • 4天3夜</p>
 
             <div class="flex justify-center gap-4 text-white">
                 <div class="bg-white/20 backdrop-blur-md rounded-lg p-3 w-20 text-center border border-white/30">
@@ -270,14 +309,14 @@
         <section id="overview" class="tab-content active">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card"><div class="text-3xl">🗓️</div><div><p class="text-xs text-slate-400 font-bold">旅遊天數</p><p class="text-lg font-extrabold text-slate-700">4天3夜</p></div></div>
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card"><div class="text-3xl">👫</div><div><p class="text-xs text-slate-400 font-bold">同行成員</p><p class="text-lg font-extrabold text-slate-700">浪漫雙人</p></div></div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card"><div class="text-3xl">👫</div><div><p class="text-xs text-slate-400 font-bold">同行成員</p><p class="text-lg font-extrabold text-slate-700">兩人同行</p></div></div>
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card"><div class="text-3xl">✈️</div><div><p class="text-xs text-slate-400 font-bold">目的地</p><p class="text-lg font-extrabold text-slate-700">韓國釜山</p></div></div>
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center gap-3 hover-card"><div class="text-3xl">🥐</div><div><p class="text-xs text-slate-400 font-bold">旅行重點</p><p class="text-lg font-extrabold text-slate-700">打卡名店</p></div></div>
             </div>
             <div class="bg-white rounded-2xl shadow-sm p-6 sm:p-8 border border-slate-100 flex flex-col md:flex-row gap-8 items-center hover-card">
                 <div class="w-full md:w-1/2">
                     <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2"><span>🗺️</span> 旅程設計理念</h2>
-                    <p class="text-slate-600 leading-relaxed mb-4">這趟旅程專為兩人打造，結合了釜山最美的海岸線、浪漫的百萬夜景，更把釜山現在最紅的<strong class="text-pink-600">自然島鹽麵包</strong>、<strong class="text-pink-600">All Sunday 貝果</strong>、松島纜車與頂級汗蒸幕一次收集！</p>
+                    <p class="text-slate-600 leading-relaxed mb-4">這趟旅程結合了釜山最美的海岸線、百萬夜景，更把釜山現在最紅的<strong class="text-pink-600">自然島鹽麵包</strong>、<strong class="text-pink-600">All Sunday 貝果</strong>、松島纜車與頂級汗蒸幕一次收集！</p>
                     <div class="flex flex-wrap gap-2 mt-4">
                         <span class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-semibold">#天空膠囊與海岸列車</span>
                         <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">#AllSundayBagel</span>
@@ -295,15 +334,15 @@
             <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2"><span>✈️</span> 航班會合資訊</h2>
             <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col md:flex-row mb-10 border border-slate-200">
                 <div class="flex-1 p-6 border-b md:border-b-0 md:border-r border-dashed border-slate-300 relative bg-gradient-to-br from-blue-50 to-white">
-                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Boyfriend</div>
+                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Roy</div>
                     <p class="text-sm text-slate-500 font-bold mb-1">抵達時間</p><h3 class="text-3xl font-black text-blue-900 mb-4">06:00</h3>
                     <div class="flex items-center justify-between mb-2"><div class="text-lg font-bold">TPE <span class="text-xs text-slate-400 font-normal">台灣</span></div><div class="text-2xl text-slate-300">➔</div><div class="text-lg font-bold">PUS <span class="text-xs text-slate-400 font-normal">金海</span></div></div>
                     <p class="text-sm text-slate-600 bg-blue-100/50 p-2 rounded inline-block mt-2">📍 建議：入境後至 3 樓餐廳稍作休息</p>
                 </div>
                 <div class="flex-1 p-6 relative bg-gradient-to-br from-pink-50 to-white">
-                    <div class="absolute top-0 right-0 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Girlfriend</div>
+                    <div class="absolute top-0 right-0 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Zora</div>
                     <p class="text-sm text-slate-500 font-bold mb-1">抵達會合</p><h3 class="text-3xl font-black text-pink-900 mb-4">12:20</h3>
-                    <div class="flex items-center justify-between mb-2"><div class="text-lg font-bold">KIX <span class="text-xs text-slate-400 font-normal">關西</span></div><div class="text-2xl text-slate-300">➔</div><div class="text-lg font-bold text-pink-600">PUS <span class="text-xs text-slate-400 font-normal">浪漫會合 ❤️</span></div></div>
+                    <div class="flex items-center justify-between mb-2"><div class="text-lg font-bold">KIX <span class="text-xs text-slate-400 font-normal">關西</span></div><div class="text-2xl text-slate-300">➔</div><div class="text-lg font-bold text-pink-600">PUS <span class="text-xs text-slate-400 font-normal">金海機場</span></div></div>
                 </div>
             </div>
 
@@ -348,11 +387,32 @@
             </div>
 
             <div id="day1" class="mb-12 pt-4">
-                <div class="flex items-center gap-3 mb-6"><div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D1</div><div><h3 class="text-2xl font-black text-slate-800">3/27 機場浪漫會合與雙列車海景</h3><p class="text-sm text-slate-500">海雲台 • 海岸列車 • 膠囊列車 • 鹽麵包</p></div></div>
+                <div class="flex items-center gap-3 mb-6"><div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D1</div><div><h3 class="text-2xl font-black text-slate-800">3/27 機場會合與雙列車海景</h3><p class="text-sm text-slate-500">海雲台 • 海岸列車 • 膠囊列車 • 鹽麵包</p></div></div>
 
                 <div class="relative timeline-container ml-2">
-                    <div class="timeline-item"><div class="timeline-icon">💑</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-pink-500 font-bold text-lg">12:20</span><h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">金海機場會合出發</h4><p class="text-sm text-slate-600 bg-slate-50 p-2 rounded-lg mb-3">🚌 搭乘機場巴士或輕軌轉地鐵前往海雲台</p></div></div>
+                    <div class="timeline-item"><div class="timeline-icon">🛬</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-pink-500 font-bold text-lg">12:20</span><h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">金海機場會合出發</h4></div></div>
+
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 金海機場 → 海雲台 MS 飯店</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚇 大眾運輸</span>
+                            <div><p class="text-slate-700">金海輕軌 → 沙上站 轉 地鐵2號線 → 海雲台站 (1號出口步行5分鐘)</p><p class="text-xs text-slate-400 mt-1">約 70 分鐘 ｜ ₩2,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">機場出口直接搭計程車，告知司機「해운대 MS호텔」</p><p class="text-xs text-slate-400 mt-1">約 40 分鐘 ｜ ₩25,000–30,000</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item"><div class="timeline-icon">🧳</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-pink-500 font-bold text-lg">13:30</span><h4 class="font-bold text-xl text-slate-800 mt-1">海雲台 MS 飯店寄放行李</h4></div></div>
+
+                    <div class="transport-card">
+                        <div class="transport-header">🚶 飯店 → 尾浦站 (海岸列車搭乘處)</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚶 步行</span>
+                            <div><p class="text-slate-700">飯店出門直行即可抵達尾浦站，路線單純</p><p class="text-xs text-slate-400 mt-1">約 5–8 分鐘 ｜ 免費</p></div>
+                        </div>
+                    </div>
 
                     <div class="mb-6 ml-12 bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <div class="flex justify-between items-center cursor-pointer">
@@ -368,7 +428,7 @@
                     <div class="timeline-item">
                         <div class="timeline-icon border-blue-400">🚂</div><div class="bg-gradient-to-r from-blue-50 to-white p-5 rounded-xl shadow-sm border border-blue-200 hover-card relative overflow-hidden">
                             <div class="absolute -right-6 top-4 bg-pink-500 text-white text-[10px] font-black py-1 px-8 transform rotate-45 shadow-sm">已預約</div>
-                            <span class="text-blue-600 font-bold text-lg">16:45</span><h4 class="font-bold text-xl text-slate-800 mt-1">天空膠囊列車 (青沙浦 ➔ 尾浦)</h4><p class="text-sm text-slate-600 mt-2">搭乘預約好的彩色小包廂！在半空中慢慢往回開，伴隨著夕陽餘暉，享受兩人專屬的私密海景時光。</p>
+                            <span class="text-blue-600 font-bold text-lg">16:45</span><h4 class="font-bold text-xl text-slate-800 mt-1">天空膠囊列車 (青沙浦 ➔ 尾浦)</h4><p class="text-sm text-slate-600 mt-2">搭乘預約好的彩色小包廂！在半空中慢慢往回開，伴隨著夕陽餘暉，享受懸空海景的獨特體驗。</p>
                         </div>
                     </div>
 
@@ -381,6 +441,18 @@
                             <div class="map-container">
                                 <iframe loading="lazy" src="https://maps.google.com/maps?q=자연도소금빵%26자연도해%20해운대&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 鹽麵包 (尾浦) → 荒嶺山夜景</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚇 大眾運輸</span>
+                            <div><p class="text-slate-700">步行至海雲台站 → 地鐵2號線至金蓮山站 (3號出口) → 轉搭計程車上山</p><p class="text-xs text-slate-400 mt-1">約 30–40 分鐘 ｜ 地鐵 ₩1,400 + 計程車 ₩5,000</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">直接從鹽麵包店前攔計程車，告知司機「황령산 봉수대」</p><p class="text-xs text-slate-400 mt-1">約 20 分鐘 ｜ ₩10,000–13,000</p></div>
                         </div>
                     </div>
 
@@ -406,6 +478,20 @@
             <div id="day2" class="mb-12">
                 <div class="flex items-center gap-3 mb-6"><div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D2</div><div><h3 class="text-2xl font-black text-slate-800">3/28 奢華汗蒸幕與爆紅貝果</h3></div></div>
                 <div class="relative timeline-container ml-2">
+                    <div class="timeline-item"><div class="timeline-icon border-slate-400">🧳</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-slate-500 font-bold text-lg">10:00</span><h4 class="font-bold text-xl text-slate-800 mt-1">退房 & 寄放行李出發</h4><p class="text-sm text-slate-600 mt-2">海雲台 MS 飯店退房，寄放大件行李後出發</p></div></div>
+
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 海雲台飯店 → SPA LAND (新世界 Centum City)</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚇 大眾運輸</span>
+                            <div><p class="text-slate-700">地鐵2號線 海雲台站 → Centum City站 (直達，1站)</p><p class="text-xs text-slate-400 mt-1">約 10 分鐘 ｜ ₩1,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">飯店門口搭車，告知「신세계 센텀시티」</p><p class="text-xs text-slate-400 mt-1">約 5 分鐘 ｜ ₩5,000–6,000</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item">
                         <div class="timeline-icon border-blue-400">🧖‍♀️</div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-blue-100 hover-card">
@@ -415,15 +501,72 @@
                             <div class="map-container"><iframe loading="lazy" src="https://maps.google.com/maps?q=Spa%20Land%20Centum%20City%20Busan&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe></div>
                         </div>
                     </div>
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 SPA LAND → All Sunday Bagel (廣安里)</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚇 大眾運輸</span>
+                            <div><p class="text-slate-700">地鐵2號線 Centum City站 → 廣安站 (2站) → 步行約10分鐘至海邊</p><p class="text-xs text-slate-400 mt-1">約 20 分鐘 ｜ ₩1,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">新世界門口搭車，告知「올선데이 광안리」</p><p class="text-xs text-slate-400 mt-1">約 10 分鐘 ｜ ₩6,000–8,000</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item">
                         <div class="timeline-icon border-cyan-400">🥯</div>
                         <div class="bg-gradient-to-r from-cyan-50 to-white p-5 rounded-xl shadow-sm border border-cyan-200 hover-card">
                             <span class="text-cyan-600 font-bold text-lg">14:30</span>
                             <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">All Sunday Bagel (올선데이 광안점)</h4>
-                            <p class="text-sm text-slate-600 mb-3">📍 汗蒸幕結束後前往廣安里。在海景第一排享受自製抹醬貝果與浪漫下午茶！</p>
+                            <p class="text-sm text-slate-600 mb-3">📍 汗蒸幕結束後前往廣安里。在海景第一排享受自製抹醬貝果與愜意下午茶！</p>
                             <div class="map-container"><iframe loading="lazy" src="https://maps.google.com/maps?q=All%20Sunday%20Bagel%20Gwangan&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe></div>
                         </div>
                     </div>
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 All Sunday Bagel (廣安里) → 달조리법 Cafe Luna Recipe (西面)</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚇 大眾運輸</span>
+                            <div><p class="text-slate-700">廣安站 → 地鐵2號線至西面站 (7號出口) → 步行5分鐘至田浦咖啡街</p><p class="text-xs text-slate-400 mt-1">約 15 分鐘 ｜ ₩1,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">搭車前往「서전로58번길 달조리법」(田浦咖啡街)</p><p class="text-xs text-slate-400 mt-1">約 10 分鐘 ｜ ₩7,000–9,000</p></div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-icon border-amber-400">☕</div>
+                        <div class="bg-gradient-to-r from-amber-50 to-white p-5 rounded-xl shadow-sm border border-amber-200 hover-card">
+                            <span class="text-amber-600 font-bold text-lg">16:00</span>
+                            <h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">달조리법 Cafe Luna Recipe</h4>
+                            <p class="text-sm text-slate-600 mb-2">📍 西面田浦咖啡街的人氣咖啡廳，每天 12:00–22:00 營業。轉車順路來一杯！</p>
+                            <p class="text-xs text-slate-400">📌 80 Seojeon-ro 58beon-gil, Busanjin District ｜ IG: @cafe_lunarecipe</p>
+                            <div class="map-container"><iframe loading="lazy" src="https://maps.google.com/maps?q=달조리법+서전로58번길+부산진구&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe></div>
+                        </div>
+                    </div>
+
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 달조리법 (西面) → 南浦 Hound Hotel</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚇 大眾運輸</span>
+                            <div><p class="text-slate-700">步行回西面站 → 地鐵1號線至南浦站 (步行3分鐘)</p><p class="text-xs text-slate-400 mt-1">約 15 分鐘 ｜ ₩1,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">搭車前往「하운드호텔 남포」</p><p class="text-xs text-slate-400 mt-1">約 10 分鐘 ｜ ₩6,000–8,000</p></div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item"><div class="timeline-icon border-slate-400">🏨</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-slate-500 font-bold text-lg">17:30</span><h4 class="font-bold text-xl text-slate-800 mt-1">Hound Hotel 入住放行李</h4><p class="text-sm text-slate-600 mt-2">南浦獵犬特級飯店 Check-in，放好行李輕裝出發逛夜市</p></div></div>
+
+                    <div class="transport-card">
+                        <div class="transport-header">🚶 Hound Hotel → 富平罐頭夜市</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚶 步行</span>
+                            <div><p class="text-slate-700">飯店步行即可抵達，沿途經過 BIFF 廣場可順逛</p><p class="text-xs text-slate-400 mt-1">約 8–10 分鐘 ｜ 免費</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item"><div class="timeline-icon border-orange-400">🍢</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-orange-500 font-bold text-lg">20:00</span><h4 class="font-bold text-xl text-slate-800 mt-1">富平罐頭市場夜市</h4><p class="text-sm text-slate-600 mt-2">大啖烤腸、辣炒年糕等在地小吃，體驗南浦洞熱鬧夜生活。</p></div></div>
                 </div>
             </div>
@@ -431,16 +574,52 @@
             <div id="day3" class="mb-12">
                 <div class="flex items-center gap-3 mb-6"><div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D3</div><div><h3 class="text-2xl font-black text-slate-800">3/29 彩色山城與松島纜車</h3></div></div>
                 <div class="relative timeline-container ml-2">
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 Hound Hotel (南浦) → 甘川洞文化村</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚌 大眾運輸</span>
+                            <div><p class="text-slate-700">南浦站搭公車 1-1、2、2-2 → 甘川文化村站下車 (或地鐵至土城站轉公車)</p><p class="text-xs text-slate-400 mt-1">約 25–30 分鐘 ｜ ₩1,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">飯店門口搭車，告知「감천문화마을」</p><p class="text-xs text-slate-400 mt-1">約 15 分鐘 ｜ ₩7,000–9,000</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item"><div class="timeline-icon border-yellow-400">🦊</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-yellow-600 font-bold text-lg">09:30</span><h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">甘川洞文化村 & 天頂展望台</h4><p class="text-sm text-slate-600">釜山的馬丘比丘！和彩色房子與小王子雕像拍滿合照。</p></div></div>
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 甘川洞文化村 → 松島海上纜車</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚌 大眾運輸</span>
+                            <div><p class="text-slate-700">甘川文化村搭公車 1-1 或 2-2 → 松島海水浴場站下車 (步行5分鐘至纜車站)</p><p class="text-xs text-slate-400 mt-1">約 20–25 分鐘 ｜ ₩1,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">村口搭計程車，告知「송도 해상케이블카」</p><p class="text-xs text-slate-400 mt-1">約 10 分鐘 ｜ ₩6,000–8,000</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item">
                         <div class="timeline-icon border-sky-400">🚠</div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-sky-100 hover-card">
                             <span class="text-sky-600 font-bold text-lg">14:30</span>
                             <h4 class="font-bold text-xl text-slate-800 mt-1">松島海上纜車 (Songdo Marine Cable Car)</h4>
-                            <p class="text-sm text-slate-600 mt-2 mb-3">搭乘透明底「水晶車廂」橫跨廣闊海域，刺激又浪漫！</p>
+                            <p class="text-sm text-slate-600 mt-2 mb-3">搭乘透明底「水晶車廂」橫跨廣闊海域，刺激又壯觀！</p>
                             <div class="map-container"><iframe loading="lazy" src="https://maps.google.com/maps?q=Songdo%20Marine%20Cable%20Car%20Busan&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe></div>
                         </div>
                     </div>
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 松島纜車 → 樂天百貨光復店 / 釜山塔</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚌 大眾運輸</span>
+                            <div><p class="text-slate-700">松島搭公車 26 或 30 → 南浦洞下車 (步行至光復路)</p><p class="text-xs text-slate-400 mt-1">約 15–20 分鐘 ｜ ₩1,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">纜車站前搭車，告知「롯데백화점 광복점」</p><p class="text-xs text-slate-400 mt-1">約 10 分鐘 ｜ ₩5,000–7,000</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item"><div class="timeline-icon border-indigo-400">⛲</div><div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover-card"><span class="text-indigo-600 font-bold text-lg">16:30</span><h4 class="font-bold text-xl text-slate-800 mt-1 mb-2">樂天百貨光復店 & 釜山塔夜景</h4><p class="text-sm text-slate-600">晚上搭乘免費戶外手扶梯上龍頭山公園賞 360 度夜景。</p></div></div>
                 </div>
             </div>
@@ -448,6 +627,18 @@
             <div id="day4" class="mb-6">
                 <div class="flex items-center gap-3 mb-6"><div class="bg-pink-100 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">D4</div><div><h3 class="text-2xl font-black text-slate-800">3/30 悠閒早晨與滿載歸國</h3></div></div>
                 <div class="relative timeline-container ml-2">
+                    <div class="transport-card">
+                        <div class="transport-header">🚗 Hound Hotel (南浦) → 金海機場</div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-green-100 text-green-700">🚇 大眾運輸</span>
+                            <div><p class="text-slate-700">地鐵1號線 南浦站 → 沙上站 → 轉金海輕軌 → 機場站</p><p class="text-xs text-slate-400 mt-1">約 50–60 分鐘 ｜ ₩2,400/人</p></div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-badge bg-yellow-100 text-yellow-700">🚕 計程車</span>
+                            <div><p class="text-slate-700">飯店門口搭車，告知「김해공항 국제선」</p><p class="text-xs text-slate-400 mt-1">約 30 分鐘 ｜ ₩18,000–22,000</p></div>
+                        </div>
+                    </div>
+
                     <div class="timeline-item">
                         <div class="timeline-icon border-emerald-400">🛍️</div>
                         <div class="bg-gradient-to-r from-emerald-50 to-white p-5 rounded-xl shadow-sm border border-emerald-100 hover-card">
@@ -457,6 +648,33 @@
                         </div>
                     </div>
                     <div class="timeline-item"><div class="timeline-icon">✈️</div><div class="bg-slate-800 text-white p-5 rounded-xl shadow-sm hover-card text-center"><span class="text-pink-300 font-bold text-lg block">13:30</span><h4 class="font-bold text-xl mt-1">搭機返家，完美結束旅程！</h4></div></div>
+                </div>
+            </div>
+
+            <div class="mt-10 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200">
+                <h3 class="text-xl font-black text-slate-800 mb-2 flex items-center gap-2">☕ 備案咖啡廳清單</h3>
+                <p class="text-sm text-slate-500 mb-4">如果行程有多餘時間，可以安排前往以下兩間人氣咖啡廳：</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-xl p-5 shadow-sm border border-amber-100 hover-card">
+                        <h4 class="font-bold text-lg text-slate-800 mb-1">Having Moment (해빙모먼트)</h4>
+                        <p class="text-sm text-slate-600 mb-2">影島區，靠近白淺灘文化村，絕美海景咖啡廳。</p>
+                        <p class="text-xs text-slate-400 mb-2">📌 196 Jeoryeong-ro, Yeongdo-gu ｜ 10:00–20:00</p>
+                        <p class="text-xs text-slate-400 mb-3">IG: @having__moment</p>
+                        <div class="text-xs text-amber-700 bg-amber-50 p-2 rounded">
+                            <strong>建議時機：</strong> Day 3 甘川洞前或纜車後繞過去 (南浦搭公車至影島約 15 分鐘)
+                        </div>
+                        <div class="map-container"><iframe loading="lazy" src="https://maps.google.com/maps?q=해빙모먼트+영도구+절영로196&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe></div>
+                    </div>
+                    <div class="bg-white rounded-xl p-5 shadow-sm border border-amber-100 hover-card">
+                        <h4 class="font-bold text-lg text-slate-800 mb-1">Momos Coffee 本店 (모모스커피)</h4>
+                        <p class="text-sm text-slate-600 mb-2">金井區，韓國冠軍精品咖啡，古色古香庭院風格本店。</p>
+                        <p class="text-xs text-slate-400 mb-2">📌 20 Osige-ro, Geumjeong-gu ｜ 07:30–18:00</p>
+                        <p class="text-xs text-slate-400 mb-3">IG: @momos_coffee</p>
+                        <div class="text-xs text-amber-700 bg-amber-50 p-2 rounded">
+                            <strong>建議時機：</strong> Day 2 早上 SPA LAND 前 (地鐵1號線溫泉場站附近，需多預留 40 分鐘車程)
+                        </div>
+                        <div class="map-container"><iframe loading="lazy" src="https://maps.google.com/maps?q=모모스커피+본점+금정구&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -533,7 +751,7 @@
 
     <footer class="bg-slate-800 text-slate-400 text-center py-8 mt-12">
         <p class="text-sm">Made with ❤️ for our Busan 2026 adventure</p>
-        <p class="text-xs mt-2 text-slate-500">釜山浪漫雙人遊 — 4天3夜完美行程規劃</p>
+        <p class="text-xs mt-2 text-slate-500">釜山自由行 — 4天3夜完美行程規劃</p>
     </footer>
 
     <script>
@@ -611,7 +829,7 @@
             new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['浪漫海景', '排隊美食', '逛街購物', '放鬆紓壓', '專業觀摩'],
+                    labels: ['海岸風光', '排隊美食', '逛街購物', '放鬆紓壓', '專業觀摩'],
                     datasets: [{
                         label: '行程佔比',
                         data: [95, 95, 60, 85, 50],
